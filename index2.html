@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de campo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+            height: 100vh; /* Altura total da janela */
+            background-color: #9d3636; /* Cor de fundo */
+        }
+
+        .container {
+            width: 90%; /* Largura do contêiner */
+            max-width: 500px; /* Largura máxima do contêiner */
+            padding: 20px; /* Preenchimento interno */
+            background-color: white; /* Cor de fundo do contêiner */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+            border-radius: 8px; /* Bordas arredondadas */
+        }
+
+        input {
+            height: 30px;
+            width: 100%; /* Largura total do contêiner */
+            margin: 10px 0; /* Margem superior e inferior */
+            padding: 5px; /* Preenchimento interno dos inputs */
+            border: 1px solid #ccc; /* Borda dos inputs */
+            border-radius: 4px; /* Bordas arredondadas dos inputs */
+        }
+
+        input:focus {
+            border-color: #007BFF; /* Cor da borda ao focar */
+            outline: none; /* Remove o contorno padrão */
+        }
+    </style>
+</head>    
+<body>
+    <div class="container">
+        <input id="usuario_nome" placeholder="Registre seu nome: "><br>
+        <input id="endereco_cep" onfocusout="buscarCEP()" placeholder="Pesquise seu CEP: "><br>
+        <input id="endereco_rua" placeholder="Pesquise sua rua: "><br>
+        <input id="endereco_bairro" placeholder="Pesquise seu bairro: "><br>
+        <input id="endereco_cidade" placeholder="Pesquise sua cidade: "><br>
+        <input id="endereco_estado" placeholder="Pesquise seu estado: "><br>
+    </div>
+
+    <script>
+        function buscarCEP() {
+            let cep = document.getElementById("endereco_cep").value;
+            let url = "https://brasilapi.com.br/api/cep/v2/" + cep;
+
+            fetch(url).then(function(dados) {
+                dados.json().then(function(endereco) {
+                    document.getElementById("endereco_rua").value = endereco.street;
+                    document.getElementById("endereco_bairro").value = endereco.neighborhood;
+                    document.getElementById("endereco_cidade").value = endereco.city;
+                    document.getElementById("endereco_estado").value = endereco.state;
+                });
+            });
+        }
+    </script>
+</body>
+</html>
