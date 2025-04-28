@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de campo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        input {
+            height: 30px;
+            width: 100%;
+            margin: 10px 0;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+    </style>
+</head>    
+<body>
+    <div class="container">
+        <input id="usuario_nome" placeholder="Registre seu nome: "><br>
+        <input id="endereco_cep" onfocusout="buscarCEP()" placeholder="Pesquise seu CEP: "><br>
+        <input id="endereco_rua" placeholder="Pesquise sua rua: "><br>
+        <input id="endereco_bairro" placeholder="Pesquise seu bairro: "><br>
+        <input id="endereco_cidade" placeholder="Pesquise sua cidade: "><br>
+        <input id="endereco_estado" placeholder="Pesquise seu estado: "><br>
+    </div>
+
+    <script>
+        function buscarCEP() {
+            let cep = document.getElementById("endereco_cep").value.replace(/\D/g, '');
+
+            if (cep.length !== 8) {
+                alert("CEP inválido. Digite 8 dígitos.");
+                return;
+            }
+
+            let url = `https://viacep.com.br/ws/${cep}/json/`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(endereco => {
+                    if (endereco.erro) {
+                        alert("CEP não encontrado.");
+                        return;
+                    }
+
+                    document.getElementById("endereco_rua").value = endereco.logradouro || "";
+                    document.getElementById("endereco_bairro").value = endereco.bairro || "";
+                    document.getElementById("endereco_cidade").value = endereco.localidade || "";
+                    document.getElementById("endereco_estado").value = endereco.uf || "";
+                })
+                .catch(() => {
+                    alert("Erro ao buscar o CEP.");
+                });
+        }
+    </script>
+</body>
+</html>
